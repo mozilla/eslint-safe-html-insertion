@@ -1,0 +1,17 @@
+{
+  "name": "eslint-safe-html-insertion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node safe-html.test.js",
+    "test-debug": "node --nolazy --inspect-brk=4646 safe-html.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "eslint": "^9.38.0"
+  }
+}
