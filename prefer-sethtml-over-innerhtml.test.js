@@ -1,6 +1,6 @@
 // enforce-foo-bar.test.js
 const { RuleTester } = require("eslint");
-const fooBarRule = require("./safe-html");
+const fooBarRule = require("./prefer-sethtml-over-innerhtml");
 
 const ruleTester = new RuleTester({
 	// Must use at least ecmaVersion 2015 because
@@ -22,6 +22,9 @@ ruleTester.run(
                 code: "foo.innerHTML = 'literals are safe';"
             },
             {
+                code: "foo.outerHTML = 'literals are safe2';"
+            }
+            {
                 code: "foo.insertAdjacentHTML('beforebegin', 'literals are safe');"
             },
 
@@ -33,6 +36,11 @@ ruleTester.run(
 				output: 'c.setHTML(evil);',
 				errors: 1,
 			},
+            {
+                code: "c.outerHTML = evil;",
+                output: "const temp = document.createElement('template');\ntemp.setHTML(${htmlVarName});\n$c.replaceWith(...temp.content.childNodes);",
+                errors: 1
+            },
            {
 				code: "c.insertAdjacentHTML('beforebegin', evil)",
                 output: "const temp = document.createElement('template');\ntemp.setHTML(evil);\nc.before(...temp.content.childNodes)",

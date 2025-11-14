@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node safe-html.test.js",
-    "test-debug": "node --nolazy --inspect-brk=4646 safe-html.test.js"
+    "test": "node prefer-sethtml-over-innerhtml.test.js",
+    "test-debug": "node --nolazy --inspect-brk=4646 prefer-sethtml-over-innerhtml.test.js"
   },
   "keywords": [],
   "author": "",

@@ -18,13 +18,8 @@ module.exports = {
 			}
 		};
 		function isUnsafeInsertAdjacentHTMLFn(callee) {
-		if (callee.type == "MemberExpression" && callee.property.type === "Identifier" && callee.property.name === "insertAdjacentHTML") {
+		if (callee.type === "MemberExpression" && callee.property.type === "Identifier" && callee.property.name === "insertAdjacentHTML") {
 				return true;
-			}
-		};
-		function isUnsafeDocumentWriteFn(callee) {
-		if (callee.type == "MemberExpression" && callee.property.type === "Identifier" && callee.object.type == "Identifier" && callee.object.name == "document" && (callee.property.name === "write" || callee.property.name == "writeln")) {
-			return true;
 			}
 		};
 		return {
@@ -41,11 +36,15 @@ module.exports = {
 								},
                                 fix(fixer) {
 									let source = context.sourceCode.getText(node);
-									// TODO: Replace with a proper node object instead of this ugly source code regex replace.
-									let propName = node.left.property.name;
-									let regexp= new RegExp(`\\b([A-Za-z_$][\\w$]*)\\.${propName}\\s*=\\s*([^;]+);?`, "g");
-                                    return fixer.replaceText(node, source.replace(regexp,'$1.setHTML($2)')
-									);
+                                        // TODO: Replace with a proper node object instead of this ugly source code regex replace.
+                                        let propName = node.left.property.name;
+									if (propName === "innerHTML") {
+                                        let regexp = new RegExp(`\\b([A-Za-z_$][\\w$]*)\\.${propName}\\s*=\\s*([^;]+);?`, "g");
+                                        return fixer.replaceText(node, source.replace(regexp, '$1.setHTML($2)')
+                                        );
+                                    } else {
+                                       let code = `const temp = document.createElement('template');\ntemp.setHTML(${htmlVarName});\n${ctxElemVarName}.replaceWith(...temp.content.childNodes);`
+                                    }
                                 }
                             });
 					}
@@ -54,15 +53,6 @@ module.exports = {
 			CallExpression(node) {
 				let debug = context.sourceCode.getText(node);
 				if (node.callee.type === "MemberExpression" && node.callee.property.type === "Identifier") {
-					if (isUnsafeDocumentWriteFn(node.callee)) {
- 						context.report({
-                                node,
-                                message: 'Unsafe use of {{ fnName }}. Use `setHTML` instead.',
-                                data: {
-                                    fnName: node.callee.property.name
-                                },
-                            });
-					}
 					if (isUnsafeInsertAdjacentHTMLFn(node.callee)) {
                         if (node.arguments.length < 2) {
 							return;
