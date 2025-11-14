@@ -4,12 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node prefer-sethtml-over-innerhtml.test.js",
-    "test-debug": "node --nolazy --inspect-brk=4646 prefer-sethtml-over-innerhtml.test.js"
+    "test": "node prefer-sethtml-over-innerhtml.test.js && node disallow-document-write-ln.test.js",
+    "test-debug-sethtml": "node --nolazy --inspect-brk=4646 prefer-sethtml-over-innerhtml.test.js",
+    "test-debug-docwrite": "node --nolazy --inspect-brk=4647 disallow-document-write-ln.test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "security",
+    "XSS",
+    "Cross-Site Scripting",
+    "HTML Sanitizer"
+  ],  "author": "",
+  "license": "MPLv2",
   "type": "commonjs",
   "devDependencies": {
     "eslint": "^9.38.0"

@@ -4,7 +4,7 @@ module.exports = {
 		type: "problem",
 		docs: {
 			description:
-				"Disallow usage of `document.write` and `document.writeln`",
+				"Disallow all usage of `document.write` and `document.writeln`",
 		},
 		fixable: "code",
 		schema: [],

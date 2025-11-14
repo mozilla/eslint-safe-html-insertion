@@ -31,20 +31,21 @@ module.exports = {
                             context.report({
                                 node,
                                 message: 'Unsafe use of `{{ property.name }}`. Use `setHTML` instead.',
-								data: {
-									propName: memberExpr.property.name
-								},
                                 fix(fixer) {
 									let source = context.sourceCode.getText(node);
-                                        // TODO: Replace with a proper node object instead of this ugly source code regex replace.
-                                        let propName = node.left.property.name;
+                                    // TODO: Replace with a proper node object instead of this ugly source code regex replace.
+                                    let propName = node.left.property.name;
 									if (propName === "innerHTML") {
                                         let regexp = new RegExp(`\\b([A-Za-z_$][\\w$]*)\\.${propName}\\s*=\\s*([^;]+);?`, "g");
                                         return fixer.replaceText(node, source.replace(regexp, '$1.setHTML($2)')
                                         );
+                                    } else if (propName === "outerHTML") {
+                                       let regexp = new RegExp(`\\b([A-Za-z_$][\\w$]*)\\.${propName}\\s*=\\s*([^;]+);?`, "g");
+                                       let code = `const temp = document.createElement('template');\ntemp.setHTML($2);\n$1.replaceWith(...temp.content.childNodes)`
+                                       return fixer.replaceText(node, source.replace(regexp, code));
                                     } else {
-                                       let code = `const temp = document.createElement('template');\ntemp.setHTML(${htmlVarName});\n${ctxElemVarName}.replaceWith(...temp.content.childNodes);`
-                                    }
+										throw new Error("Unexpected assignment property.");
+									}
                                 }
                             });
 					}

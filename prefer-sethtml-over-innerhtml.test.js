@@ -1,6 +1,6 @@
 // enforce-foo-bar.test.js
 const { RuleTester } = require("eslint");
-const fooBarRule = require("./prefer-sethtml-over-innerhtml");
+const setHTMLRule = require("./prefer-sethtml-over-innerhtml");
 
 const ruleTester = new RuleTester({
 	// Must use at least ecmaVersion 2015 because
@@ -11,7 +11,7 @@ const ruleTester = new RuleTester({
 // Throws error if the tests in ruleTester.run() do not pass
 ruleTester.run(
 	"safe-html", // rule name
-	fooBarRule, // rule code
+	setHTMLRule, // rule code
 	{
 		// 'valid' checks cases that should pass
 		valid: [
@@ -23,7 +23,7 @@ ruleTester.run(
             },
             {
                 code: "foo.outerHTML = 'literals are safe2';"
-            }
+            },
             {
                 code: "foo.insertAdjacentHTML('beforebegin', 'literals are safe');"
             },
@@ -38,7 +38,7 @@ ruleTester.run(
 			},
             {
                 code: "c.outerHTML = evil;",
-                output: "const temp = document.createElement('template');\ntemp.setHTML(${htmlVarName});\n$c.replaceWith(...temp.content.childNodes);",
+                output: "const temp = document.createElement('template');\ntemp.setHTML(evil);\nc.replaceWith(...temp.content.childNodes);",
                 errors: 1
             },
            {
@@ -61,17 +61,8 @@ ruleTester.run(
                 output: "const temp = document.createElement('template');\ntemp.setHTML(evil);\nc.after(...temp.content.childNodes)",
 				errors: 1,
 			},
-            {
-				code: "document.write(something);",
-				errors: 1,
-			},
-            {
-				code: "document.writeln(something);",
-				errors: 1,
-			},
-
 		],
 	},
 );
 
-console.log("All tests passed!");
+console.log("[prefer-sethtml] All tests passed!");
