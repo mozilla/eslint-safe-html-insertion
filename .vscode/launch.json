@@ -5,16 +5,28 @@
     "version": "0.2.0",
     "configurations": [
     {
-        "name": "Run Test with Debugger",
+        "name": "Run Test for setHTML swith Debugger",
         "type": "node",
         "request": "launch",
         "cwd": "${workspaceRoot}",
         "runtimeExecutable": "npm",
         "runtimeArgs": [
-            "run-script", "test-debug"
+            "run-script", "test-debug-sethtml"
         ],
         "port": 4646
     },
+        {
+        "name": "Run Test for docWrite swith Debugger",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [
+            "run-script", "test-debug-docwrite"
+        ],
+        "port": 4647
+    },
+
     {
         "name": "Run Test",
         "type": "node",
